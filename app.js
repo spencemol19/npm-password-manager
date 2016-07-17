@@ -4,17 +4,6 @@ storage.initSync();
 
 console.log("starting password manager...\n");
 
-/*      Command Line:
-//      Commands & Arguments
-// create
-//      --name
-//      --username
-//      --password
-
-// get
-//      --name
-*/
-
 var argv = require('yargs')
     .command('create', 'Creates account', function (yargs) {
         yargs.options({
