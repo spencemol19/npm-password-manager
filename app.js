@@ -59,27 +59,11 @@ var argv = require('yargs')
                 type: 'string'
             }
         })
-    })
-    .command('delete', 'Delete account using account name', function(yargs) {
-        yargs.options({
-            name: {
-                demand: true,
-                alias: 'n',
-                description: 'Account name',
-                type: 'string'
-            },
-            masterPassword: {
-                demand: true,
-                alias: 'm',
-                description: 'Master password',
-                type: 'string'
-            }
-        })
-    })
-    .help('help')
+    }).help('help')
     .argv;
 
 var command = argv._[0];
+console.log(argv);
 
 /*Account Methods*/
 
@@ -126,9 +110,9 @@ function getAccount (accountName /*String*/, masterPassword /*String*/) {
 function deleteAccount (accountName /*String*/, masterPassword /*String*/) {
     var accounts = getAccounts(masterPassword);
     var account = getAccount(accountName, masterPassword);
-    accounts = accounts.splice(accounts.indexOf(account), 1);
+    var updatedAccounts = accounts.splice(accounts.indexOf(account), 1);
     storage.removeItemSync('accounts');
-    saveAccounts(accounts, masterPassword);
+    saveAccounts(updatedAccounts, masterPassword);
     
     return account;
 }
@@ -166,20 +150,5 @@ switch(command) {
         catch(err) {
             console.log("Unable to fetch account.\n" + err.message);
         }
-    break;
-    case 'delete':
-            try {
-                if (argv.name.length > 0 && argv.masterPassword.length > 0) {
-                    var undesiredAcct = deleteAccount(argv.name, argv.masterPassword);
-                    if (typeof undesiredAcct !== 'undefined') {
-                        console.log(`Your ${undesiredAcct.name} account has been removed from our records`);
-                    } else
-                        console.log(`No records currently exist for your ${argv.name} account.`);
-                } else
-                    console.log("No value given for Account Name");
-            }
-            catch(err) {
-                console.log("Unable to remove account.\n" + err.message);
-            }
     break;
 }
